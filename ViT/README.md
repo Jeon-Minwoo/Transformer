@@ -31,6 +31,7 @@ Attention is basically inner product operation as similarity measurement. You ha
 |Q|Query|An information to compare this with all keys to find the best-matching key.|because|
 |K|Key|A set of key that leads to appropriate values.|I, love, NLP, because, it, is, fascinating|
 |V|Value|The result of attention.|나, 자연어처리, 좋, 왜냐하면, 이것, 은, 흥미롭다|
+
 When you translate "because" in "I love NLP because it is fascinating.", first you calculate the similarity between "because" and other words. Then, weight-sum the korean words with the similarity, you get an appropriate word vector.
 
 To take attention mechanism further, Ashish Vaswani et al. introduced a framework named called "[Transformer](https://proceedings.neurips.cc/paper/2017/hash/3f5ee243547dee91fbd053c1c4a845aa-Abstract.html)". Transformer takes a sequential sentence as a pile of words and extracts features through attention encoder and decoders with several types of attention. More details of transformer structure is explained on the "Transformer" section. While attention mechanism sounds quite reasonable with NLP examples, it's not trivial that it works in computer vision as well. Alexey Dosovitskiy from Google Research introduced transformer for computer vision and explained how it works.
@@ -61,7 +62,7 @@ They applied GELU activation function([arXiv](https://arxiv.org/abs/1606.08415),
 > <img src='./archive/img/01. preceding works/01. attention mechanism/03. gelu.png' /> <br />
 > Figure3. The $\mathrm{GELU} (\mu=0,\sigma=1)$, $\mathrm{ReLU}$ and $\mathrm{ELU} (\alpha=1)$.
 > 
-> <img src='archive/img/01. preceding works/01. attention mechanism/04. gelu_performance.png' /> <br />
+> <img src='./archive/img/01. preceding works/01. attention mechanism/04. gelu_performance.png' /> <br />
 > Figure4. MNIST Classification Results. Left are the loss curves without dropout, and right are curves with a dropout rate of 0.5. Each curve is the the median of five runs. Training set log losses are the darker, lower curves, and the fainter, upper curves are the validation set log loss curves.
 
 See the [paper](https://arxiv.org/abs/1606.08415) for more experiments.
