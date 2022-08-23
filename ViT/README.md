@@ -66,3 +66,6 @@ They applied GELU activation function([arXiv](https://arxiv.org/abs/1606.08415),
 
 See the [paper](https://arxiv.org/abs/1606.08415) for more experiments.
 
+## Experiments
+### Settings & Environments
+Because our computing resource is limited, it wasn't possible to follow exactly same batch size and traning procedure.
