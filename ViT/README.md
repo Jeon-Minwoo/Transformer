@@ -45,3 +45,24 @@ Convolutional neural networks, is in a way, a channel-level ensemble. Each kerne
 
 Another way to adapt attention is to split an image into fixed size patches and calculates similarity between all combinations of the patches. Detailed description of this method is in the "Transformer' section.
 
+## Vision Transformers
+### Class Token
+Like BERT([arXiv](https://arxiv.org/abs/1810.04805), [PDF](https://arxiv.org/pdf/1810.04805.pdf)), transformer trains class token by passing it through multiple encoder blocks. The class token first initialized with zeros and appended to the input. Just like BERT, the NLP transformer also uses class token. Consequently, class token was inherited to vision transformer too. On vision transformer. The class token is a special symbol to train. Even if it looks like a part of the input, as long as it's a trainable parameter, it make more sense to treat it as a part of the model. 
+
+### Positional Embedding
+First, you should understand that sequence is a kind of position. The authors of NLP transformer tried to embed fixed positional values to the input and the value was formulated as ${p_t}^{(i)} := \begin{cases} \sin(w_k \bullet t) \quad \mathrm{if} i=2k \\ \cos(w_k \bullet t) \quad \mathrm{if} i=2k+1 \\ \end{cases}, w_t = {1 \over {10000^{2k/d}}}$. This represents unique positional information to all tokens. On the other hand, vision transformer, set the positional information as another learnable parameter. After the training, the positional vector is looks like Figure5.
+
+> <img src='./archive/img/01. preceding works/01. attention mechanism/05. positional embedding.png' />
+> Figure5. Position embeddings of models trained with different hyperparameters.
+
+### GELU Activation
+They applied GELU activation function([arXiv](https://arxiv.org/abs/1606.08415), [PDF](https://arxiv.org/pdf/1606.08415.pdf)) proposed by Dan Hendrycks and Kevin Gimpel. They combined dropout, zoneout and ReLU activation function to formulate GELU. ReLU gives non-linearity by dropping negative outputs and os as GELU. Let $x\Phi(x) = \Phi(x) \times Ix + (1 - \Phi(x)) \times 0x$, then $x\Phi(x)$ defines decision boundary. Refer to the paper, loosely, this expression states that we scale $x$ by how much greater it is than other inputs. Since, the CDF of a Gaussian is often computed with the error function, they defiend Gaussian Error Linear Unit (GELU) as $\textrm{GELU}(x) = xP(X \le x) = x\Phi(x)=x\bullet {1 \over 2}[\textrm{erf}({x \over \sqrt{2}})]$. and we can approximate this with $\mathrm{GELU}(x) = 0.5x(1+\tanh[\sqrt{2 \over \pi}(x + 0.044715x^3)])$.
+
+> <img src='./archive/img/01. preceding works/01. attention mechanism/03. gelu.png' /> <br />
+> Figure3. The $\mathrm{GELU} (\mu=0,\sigma=1)$, $\mathrm{ReLU}$ and $\mathrm{ELU} (\alpha=1)$.
+> 
+> <img src='archive/img/01. preceding works/01. attention mechanism/04. gelu_performance.png' /> <br />
+> Figure4. MNIST Classification Results. Left are the loss curves without dropout, and right are curves with a dropout rate of 0.5. Each curve is the the median of five runs. Training set log losses are the darker, lower curves, and the fainter, upper curves are the validation set log loss curves.
+
+See the [paper](https://arxiv.org/abs/1606.08415) for more experiments.
+
