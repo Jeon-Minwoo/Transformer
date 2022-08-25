@@ -47,6 +47,38 @@ Convolutional neural networks, is in a way, a channel-level ensemble. Each kerne
 Another way to adapt attention is to split an image into fixed size patches and calculates similarity between all combinations of the patches. Detailed description of this method is in the "Transformer' section.
 
 ## Vision Transformers
+### Overall Structure
+
+1. image patching
+2. Linear Projection
+3. CLS Token & Positional Embedding
+4. Transformer Encoder
+5. MLP Head  
+<br/>
+
+### Patching
+<img src = "archive/img/02. vision transformer/01. patching/vit_patching_2.png" width="300">  <br/>
+Patching is a process corresponding to the red area above among the entire ViT structure. <br/><br/>
+ 
+![Untitled](archive/img/02.%20vision%20transformer/01.%20patching/vit_patching.png)
+
+![Untitled](archive/img/02.%20vision%20transformer/01.%20patching/vit_patching_1.png)
+
+- Divide the input image into patches of a specific size.
+- P → patch size, N → total number of patches
+- Flatten each 3D patch into a 2D patch.  
+
+C, H, and W represent Channel, Height, and Width, respectively, and P represents the size of the patch. Each patch has a size of (C, P, P), and N means the total number of patches. The total number of patches N can be obtained through $\frac{HW}{P^2}$.
+If each patch is flattened into a 2d vector, the size of each vector becomes $1$ x $P^2C$, and the sum of these vectors is called $x_p$ ($N$ x $P^2C$).
+
+### Linear Projection
+<img src = "archive/img/02. vision transformer/02. linear projection/vit_linear_projection_2.png" width="300">  <br/>
+Linear projection is a process corresponding to the red area above among the entire ViT structure.<br/><br/>
+
+![Untitled](archive/img/02.%20vision%20transformer/02.%20linear%20projection/vit_linear_projection.png)
+- Each flattened 2d patch is multiplied by E, which is a Linear Projection Matrix, and the vector size is changed to a latent vector size (D).
+- The shape of E becomes ($P^2C$, $D$), and when $x_p$ is multiplied by E, it has the size (N, D). If the batch size is also considered, a tensor having a size of (B, N, D) can be finally obtained.<br/>
+
 ### Class Token
 Like BERT([arXiv](https://arxiv.org/abs/1810.04805), [PDF](https://arxiv.org/pdf/1810.04805.pdf)), transformer trains class token by passing it through multiple encoder blocks. The class token first initialized with zeros and appended to the input. Just like BERT, the NLP transformer also uses class token. Consequently, class token was inherited to vision transformer too. On vision transformer. The class token is a special symbol to train. Even if it looks like a part of the input, as long as it's a trainable parameter, it make more sense to treat it as a part of the model. 
 
@@ -55,6 +87,17 @@ First, you should understand that sequence is a kind of position. The authors of
 
 > <img src='./archive/img/01. preceding works/01. attention mechanism/05. positional embedding.png' />
 > Figure5. Position embeddings of models trained with different hyperparameters.
+
+<br/><img src = "archive/img/02. vision transformer/03. positional embedding/vit_pe_2.png" width="400"> <br/>
+Positional embedding is a process corresponding to the red area above among the entire ViT structure. <br/><br/>
+
+![Untitled](archive/img/02.%20vision%20transformer/03.%20positional%20embedding/vit_pe.png)
+
+- Add CLS Token, a learnable random vector of 1xD size.
+- Add $E_{pos}$, a learnable random vector of size (N+1)xD.
+- The final Transformer input becomes $z_0$.  
+Add the class token to the embedding result as shown in the figure above. Then a matrix of size (N, D) becomes of size (N+1, D).
+<br/>
 
 ### GELU Activation
 They applied GELU activation function([arXiv](https://arxiv.org/abs/1606.08415), [PDF](https://arxiv.org/pdf/1606.08415.pdf)) proposed by Dan Hendrycks and Kevin Gimpel. They combined dropout, zoneout and ReLU activation function to formulate GELU. ReLU gives non-linearity by dropping negative outputs and os as GELU. Let $x\Phi(x) = \Phi(x) \times Ix + (1 - \Phi(x)) \times 0x$, then $x\Phi(x)$ defines decision boundary. Refer to the paper, loosely, this expression states that we scale $x$ by how much greater it is than other inputs. Since, the CDF of a Gaussian is often computed with the error function, they defiend Gaussian Error Linear Unit (GELU) as $\textrm{GELU}(x) = xP(X \le x) = x\Phi(x)=x\bullet {1 \over 2}[\textrm{erf}({x \over \sqrt{2}})]$. and we can approximate this with $\mathrm{GELU}(x) = 0.5x(1+\tanh[\sqrt{2 \over \pi}(x + 0.044715x^3)])$.
@@ -67,6 +110,59 @@ They applied GELU activation function([arXiv](https://arxiv.org/abs/1606.08415),
 
 See the [paper](https://arxiv.org/abs/1606.08415) for more experiments.
 
+### Layer Normalization
+
+![Untitled](archive/img/02.%20vision%20transformer/04.%20layer%20normalization/vit_ln.png)
+
+- Normalization for each feature.
+<br/>
+<img src = "archive/img/02. vision transformer/04. layer normalization/vit_ln_2.png" width="400">     
+
+
+- Batch Normalization operates only on N, H, and W. Therefore, the mean and standard deviation are calculated regardless of channel map C and normalized for batch N.
+- Since Layer Normalization operates only on C, H, W, the mean and standard deviation are calculated regardless of batch N. That is, it is normalized to channel map C.
+- Layer normalization is more used than batch normalization because the mini-batch length can be different in NLP's Transformer. ViT borrowed NLP's Transformer Layner normalization.
+
 ## Experiments
 ### Settings & Environments
 Because our computing resource is limited, it wasn't possible to follow exactly same batch size and traning procedure.
+- pytorch version: 1.12.1
+- GPU: RTX2080ti or RTX Titan
+
+- Dataset: Cifar-10
+- Hyper parameter & Training conditions
+    - optimizer: Adam
+    - batch size: 128
+    - Epochs: 500
+    - learning rate: 0.002
+    - weighted random sampling
+
+| Test acc | latent_vec_dim(D)| # of heads | # of layers | mlp hidden dim | patch size | drop out | model parameter |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 84.64% | 128 | 8 | 12 | 64 | 4 | 0.2 | 0.8M |
+| 82.22% | 128 | 8 | 12 | 64 | 4 | 12 | 0.1 | 0.8M |
+| 80.22% | 128 | 12 | 12 | 64 | 4 | 8 | 0.1 | 0.8M | 
+| 72.46% | 768 | 12 | 12 | 3072 | 4 | 8 | 0.1 | 78M | 64 |
+| 70.24% | 1024 | 16 | 24 | 512 | 4 | 16 | 0.1 | 101M | 512 |
+
+
+| Model | ViT | ResNet18 |
+| --- | --- | --- |
+| Total params | 0.8M | 11M |
+| Test acc | 84.64% | 80.24% |
+
+### Visualization
+- Embedding filter (D x P x P x C)  
+This is the result of visualization of E, a matrix that performs linear projection.  
+A result similar to the low-level layer in CNN appears as a visualization.  
+In other words, it means that the training is good like CNN.  
+![Untitled](archive/img/03.%20Experiments/Embedding_filters.png)
+
+- Positional embedding similarity
+It can be seen that Positional Embedding is well trained to mean the location of the data.  
+![Untitled](archive/img/03.%20Experiments/position_embedding_similarity.png)
+
+- Attention maps  ((#heads x #layers) x N x N)  
+It can be seen that the low level layer sees everything from near to far, whereas the high level layer sees the whole.  
+CNN also sees a larger area as the layer gets deeper due to the nature of the convolution operation, and it can be seen that the Vision Transformer also has such a property.  
+![Untitled](archive/img/03.%20Experiments/attention_maps.png)
