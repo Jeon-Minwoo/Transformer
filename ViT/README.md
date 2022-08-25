@@ -46,7 +46,7 @@ Convolutional neural networks, is in a way, a channel-level ensemble. Each kerne
 
 Another way to adapt attention is to split an image into fixed size patches and calculates similarity between all combinations of the patches. Detailed description of this method is in the "Transformer' section.
 
-## Vision Transformers
+## Vision Transformer
 ### Overall Structure
 
 1. image patching
