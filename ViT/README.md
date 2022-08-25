@@ -140,10 +140,10 @@ Because our computing resource is limited, it wasn't possible to follow exactly 
 | Test acc | latent_vec_dim(D)| # of heads | # of layers | mlp hidden dim | patch size | drop out | model parameter |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 84.64% | 128 | 8 | 12 | 64 | 4 | 0.2 | 0.8M |
-| 82.22% | 128 | 8 | 12 | 64 | 4 | 12 | 0.1 | 0.8M |
-| 80.22% | 128 | 12 | 12 | 64 | 4 | 8 | 0.1 | 0.8M | 
-| 72.46% | 768 | 12 | 12 | 3072 | 4 | 8 | 0.1 | 78M | 64 |
-| 70.24% | 1024 | 16 | 24 | 512 | 4 | 16 | 0.1 | 101M | 512 |
+| 82.22% | 128 | 8 | 12 | 64 | 4 | 0.1 | 0.8M |
+| 80.22% | 128 | 12 | 12 | 64 | 4 | 0.1 | 0.8M | 
+| 72.46% | 768 | 12 | 12 | 3072 | 4 | 0.1 | 78M |
+| 70.24% | 1024 | 16 | 24 | 512 | 4 | 0.1 | 101M |
 
 
 | Model | ViT | ResNet18 |
