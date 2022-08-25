@@ -158,11 +158,11 @@ A result similar to the low-level layer in CNN appears as a visualization.
 In other words, it means that the training is good like CNN.  
 ![Untitled](archive/img/03.%20Experiments/Embedding_filters.png)
 
-- Positional embedding similarity
+- Positional embedding similarity  
 It can be seen that Positional Embedding is well trained to mean the location of the data.  
 ![Untitled](archive/img/03.%20Experiments/position_embedding_similarity.png)
 
-- Attention maps  ((#heads x #layers) x N x N)  
+- Attention maps  ((#heads x #layers) x N x N)    
 It can be seen that the low level layer sees everything from near to far, whereas the high level layer sees the whole.  
 CNN also sees a larger area as the layer gets deeper due to the nature of the convolution operation, and it can be seen that the Vision Transformer also has such a property.  
 ![Untitled](archive/img/03.%20Experiments/attention_maps.png)
