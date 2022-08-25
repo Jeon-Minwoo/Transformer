@@ -95,11 +95,11 @@ After the training, the positional vector is looks like Figure7.
 ### GELU Activation
 They applied GELU activation function([arXiv](https://arxiv.org/abs/1606.08415), [PDF](https://arxiv.org/pdf/1606.08415.pdf)) proposed by Dan Hendrycks and Kevin Gimpel. They combined dropout, zoneout and ReLU activation function to formulate GELU. ReLU gives non-linearity by dropping negative outputs and os as GELU. Let $x\Phi(x) = \Phi(x) \times Ix + (1 - \Phi(x)) \times 0x$, then $x\Phi(x)$ defines decision boundary. Refer to the paper, loosely, this expression states that we scale $x$ by how much greater it is than other inputs. Since, the CDF of a Gaussian is often computed with the error function, they defiend Gaussian Error Linear Unit (GELU) as $\textrm{GELU}(x) = xP(X \le x) = x\Phi(x)=x\bullet {1 \over 2}[\textrm{erf}({x \over \sqrt{2}})]$. and we can approximate this with $\mathrm{GELU}(x) = 0.5x(1+\tanh[\sqrt{2 \over \pi}(x + 0.044715x^3)])$.
 
-> <img src='./archive/img/01. preceding works/01. attention mechanism/03. gelu.png' /> <br />
-> Figure8. The $\mathrm{GELU} (\mu=0,\sigma=1)$, $\mathrm{ReLU}$ and $\mathrm{ELU} (\alpha=1)$.
-> 
+> <img src='./archive/img/01. preceding works/01. attention mechanism/03. gelu.png' />
+> <p>Figure8. Graph comparison among GELU, ReLU and ELU activation functions.</p>
+
 > <img src='./archive/img/01. preceding works/01. attention mechanism/04. gelu_performance.png' /> <br />
-> Figure9. MNIST Classification Results. Left are the loss curves without dropout, and right are curves with a dropout rate of 0.5. Each curve is the the median of five runs. Training set log losses are the darker, lower curves, and the fainter, upper curves are the validation set log loss curves.
+> <p>Figure9. MNIST Classification Results. Left are the loss curves without dropout, and right are curves with a dropout rate of 0.5. Each curve is the the median of five runs. Training set log losses are the darker, lower curves, and the fainter, upper curves are the validation set log loss curves.</p>
 
 See the [paper](https://arxiv.org/abs/1606.08415) for more experiments.
 
